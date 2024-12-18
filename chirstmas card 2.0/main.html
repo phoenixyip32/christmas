@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        /* A4紙張比例約為 1:1.4142 (1:√2) */
+        .book {
+            position: relative;
+            width: 595px;  /* A4寬度像素約等於595px */
+            height: 842px; /* A4高度像素約等於842px */
+            perspective: 2500px;
+            margin: 50px auto;
+        }
+        
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-origin: left center;
+            transition: transform 1s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .page-1 { z-index: 4; }
+        .page-2 { z-index: 3; }
+        .page-3 { z-index: 2; }
+        .page-4 { z-index: 1; }
+        
+        .front, .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: white;
+            border-radius: 5px;
+        }
+        
+        .front {
+            background: linear-gradient(45deg, #ff0000, #990000);
+            color: white;
+        }
+        
+        .back {
+            background: white;
+            color: #333;
+            transform: rotateY(180deg);
+        }
+        
+        .page-2 .front, .page-3 .front, .page-4 .front {
+            background: white;
+            color: #333;
+        }
+        
+        .flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-xl {
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .text-lg {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .snowflake {
+            color: white;
+            position: absolute;
+            font-size: 20px;
+            animation: fall linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(842px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body style="background: #333; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; font-family: Arial, sans-serif;">
+    <div class="book">
+        <!-- 封面 -->
+        <div class="page page-1">
+            <div class="front">
+                <h1 class="text-center text-xl">✨ 聖誕快樂 ✨</h1>
+                <p class="text-center text-lg">點擊打開卡片</p>
+                <div style="font-size: 72px; margin: 40px;">🎄</div>
+            </div>
+            <div class="back">
+                <h2 class="text-center text-xl">親愛的朋友</h2>
+                <p class="text-center text-lg">在這個充滿祝福的季節</p>
+                <div style="font-size: 48px; margin: 20px;">🎁</div>
+            </div>
+        </div>
+
+        <!-- 第二頁 -->
+        <div class="page page-2">
+            <div class="front">
+                <h2 class="text-center text-xl">願你擁有</h2>
+                <p class="text-center text-lg">溫暖的聖誕</p>
+                <p class="text-center text-lg">幸福的時光</p>
+                <div style="font-size: 48px; margin: 20px;">⭐</div>
+            </div>
+            <div class="back">
+                <h2 class="text-center text-xl">祝福你</h2>
+                <p class="text-center text-lg">新的一年裡</p>
+                <p class="text-center text-lg">事事順心</p>
+                <div style="font-size: 48px; margin: 20px;">🕯️</div>
+            </div>
+        </div>
+
+        <!-- 第三頁 -->
+        <div class="page page-3">
+            <div class="front">
+                <h2 class="text-center text-xl">願你</h2>
+                <p class="text-center text-lg">平安喜樂</p>
+                <p class="text-center text-lg">心想事成</p>
+                <div style="font-size: 48px; margin: 20px;">🎅</div>
+            </div>
+            <div class="back">
+                <h2 class="text-center text-xl">祝願你</h2>
+                <p class="text-center text-lg">聖誕快樂</p>
+                <p class="text-center text-lg">新年進步</p>
+                <div style="font-size: 48px; margin: 20px;">🌟</div>
+            </div>
+        </div>
+
+        <!-- 第四頁（背面） -->
+        <div class="page page-4">
+            <div class="front">
+                <h2 class="text-center text-xl">聖誕祝福</h2>
+                <p class="text-center text-lg">願你永遠快樂</p>
+                <p class="text-center text-lg" style="margin-top: 40px;">祝福你</p>
+                <div style="font-size: 48px; margin: 20px;">❤️</div>
+            </div>
+            <div class="back">
+                <!-- 背面可以留空或加上署名 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 添加雪花效果
+        function createSnowflakes() {
+            const snowflakes = ['❄', '❅', '❆'];
+            const container = document.body;
+            
+            setInterval(() => {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.style.left = Math.random() * window.innerWidth + 'px';
+                snowflake.textContent = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                container.appendChild(snowflake);
+                
+                setTimeout(() => {
+                    container.removeChild(snowflake);
+                }, 5000);
+            }, 300);
+        }
+
+        // 為每一頁添加翻頁效果
+        document.querySelectorAll('.page').forEach(page => {
+            page.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+        });
+
+        // 開始雪花動畫
+        createSnowflakes();
+    </script>
+</body>
+</html>
